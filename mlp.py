@@ -1,13 +1,13 @@
 import numpy as np
-from layers import Dense
-from activations import relu, softmax
-from initializers import random
-from loss import cce
+import layers
+import activations
+import initializers
+import losses
 
-layer = Dense(
+layer = layers.Dense(
     shape=(2, 3),
-    activation=relu,
-    initializer=random
+    activation=activations.relu,
+    initializer=initializers.random
 )
 
 input = np.array([
@@ -19,10 +19,10 @@ input = np.array([
 
 output = layer.forward(input)
 
-output_layer = Dense(
+output_layer = layers.Dense(
     shape=(3, 2),
-    activation=softmax,
-    initializer=random
+    activation=activations.softmax,
+    initializer=initializers.random
 )
 
 output = output_layer.forward(output)
@@ -30,5 +30,5 @@ print(output)
 
 y_true = np.array([0, 1, 0, 1])
 
-loss = cce(output, y_true)
+loss = losses.cce(output, y_true)
 print(loss)

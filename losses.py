@@ -15,3 +15,11 @@ def cce(y_pred, y_true):
         raise ValueError('Invalid shape of y_true')
 
     return np.mean(-np.log(confidences))
+
+
+def ssr(y_pred, y_true):
+    return np.mean((y_pred - y_true) ** 2)
+
+
+def mae(y_pred, y_true):
+    return np.mean(np.abs(y_pred - y_true))
