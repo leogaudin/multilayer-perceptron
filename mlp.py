@@ -3,12 +3,7 @@ import layers
 import activations
 import initializers
 import losses
-
-layer = layers.Dense(
-    shape=(2, 3),
-    activation=activations.relu,
-    initializer=initializers.random
-)
+from model import Model
 
 input = np.array([
                     [1, 2],
@@ -17,16 +12,14 @@ input = np.array([
                     [7, 8]
                 ])
 
-output = layer.forward(input)
+model = Model([
+    layers.Dense((2, 3), initializers.random),
+    activations.ReLU(),
+    layers.Dense((3, 2), initializers.random),
+    activations.Softmax()
+])
 
-output_layer = layers.Dense(
-    shape=(3, 2),
-    activation=activations.softmax,
-    initializer=initializers.random
-)
-
-output = output_layer.forward(output)
-print(output)
+output = model.forward(input)
 
 y_true = np.array([0, 1, 0, 1])
 
