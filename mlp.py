@@ -12,16 +12,30 @@ input = np.array([
                     [7, 8]
                 ])
 
-model = Model([
-    layers.Dense((2, 3), initializers.random),
-    activations.ReLU(),
-    layers.Dense((3, 2), initializers.random),
-    activations.Softmax()
-])
+model = Model(
+    layers=[
+        layers.Dense((2, 4), initializers.random),
+        activations.ReLU(),
+        layers.Dense((4, 6), initializers.random),
+        activations.ReLU(),
+        layers.Dense((6, 2), initializers.random),
+        activations.Softmax()
+    ],
+    loss=losses.CCE()
+)
 
-output = model.forward(input)
+y_true = np.array([
+                    [1, 0],
+                    [0, 1],
+                    [1, 0],
+                    [0, 1]
+                ])
 
-y_true = np.array([0, 1, 0, 1])
+cce = losses.CCE()
 
-loss = losses.cce(output, y_true)
-print(loss)
+model.fit(
+    x_train=input,
+    y_train=y_true,
+    epochs=100,
+    learning_rate=0.01
+)

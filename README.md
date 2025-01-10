@@ -74,35 +74,13 @@ $$
 \frac{dy}{dx} = \frac{dy}{dv} \cdot \frac{dv}{du} \cdot \frac{du}{dx}
 $$
 
-> 💡 Back propagation is one of the hardest concepts of this project, so be sure to check out the resources, particularly [this video](https://www.youtube.com/watch?v=pauPCy_s0Ok) that decomposes the problem amazingly.
+> 💡 Back propagation is one of the hardest concepts of this project, so be sure to check out the resources, particularly [this video](https://www.youtube.com/watch?v=pauPCy_s0Ok) that decomposes the problem amazingly, also available as  [an article](https://towardsdatascience.com/math-neural-network-from-scratch-in-python-d6da9f29ce65).
 
 Just as forward propagation goes from start to finish, passing inputs sequentially, back propagation goes from finish to start, passing gradients sequentially.
 
 We simply need to compute the gradient of an output with respect to an input, for each layer.
 
 So, let's do so step by step. Let's say our neural network output a probability distribution $[0.7, 0.3]$ for a sample, and the true distribution is $[1, 0]$.
-
-If we used the **mean squared error** loss, the loss would be:
-
-$$
-L = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-$$
-
-Where $y_i$ is the true value and $\hat{y}_i$ is the predicted value.
-
-The gradient of the loss with respect to the output would be:
-
-$$
-\frac{\partial L}{\partial \hat{y}_i} = \frac{2}{n} \cdot (\hat{y}_i - y_i)
-$$
-
-Here:
-
-$$
-\frac{\partial L}{\partial Y} = \frac{2}{n} \odot \begin{bmatrix} 0.7 - 1 \\ 0.3 - 0 \end{bmatrix} = \begin{bmatrix} -0.6 \\ 0.3 \end{bmatrix}
-$$
-
-And that is the first gradient we will pass to the output layer.
 
 ## Resources
 
@@ -111,6 +89,8 @@ And that is the first gradient we will pass to the output layer.
 - [📺 YouTube − Backpropagation calculus | DL4](https://www.youtube.com/watch?v=tIeHLnjs5U8) : understand the math behind backpropagation.
 - [📺 YouTube − Backpropagation Algorithm | Neural Networks](https://www.youtube.com/watch?v=sIX_9n-1UbM) : have a good insight of the chain rule's logic in backpropagation.
 - [📺 YouTube − Neural Network from Scratch | Mathematics & Python Code](https://www.youtube.com/watch?v=pauPCy_s0Ok) : understand the actual implementation of backpropagation in code.
+- [📖 Medium − Neural Network from scratch in Python](https://towardsdatascience.com/math-neural-network-from-scratch-in-python-d6da9f29ce65) : the corresponding article to the previous video.
+- [📖 GeeksForGeeks − Derivative of the Softmax Function and the Categorical Cross-Entropy Loss](https://www.geeksforgeeks.org/derivative-of-the-softmax-function-and-the-categorical-cross-entropy-loss/)
+- [📖 Pinecone − Cross-Entropy Loss: make predictions with confidence](hthttps://www.pinecone.io/learn/cross-entropy-loss/)
 
-- [📖 ]()
 - [💬 ]()
