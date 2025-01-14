@@ -27,12 +27,14 @@ class Model:
         epochs,
         learning_rate,
         loss_function: Loss,
-        batch_size=128,
+        batch_size=32,
     ):
         loss_accum = []
         test_loss_accum = []
 
         for epoch in range(epochs):
+            if batch_size is None:
+                batch_size = len(x_train)
             batch = np.random.choice(len(x_train), batch_size)
             x_train_batch = x_train[batch]
             y_train_batch = y_train[batch]
@@ -44,11 +46,10 @@ class Model:
             grad = loss_function.prime(y_pred, y_train_batch)
             self.backward(grad, learning_rate)
 
-            for x, y in zip(x_test, y_test):
-                y_pred = self.forward(x)
-                test_loss += loss_function.compute(y_pred, y)
+            y_pred = self.forward(x_test)
+            test_loss += loss_function.compute(y_pred, y_test)
 
-            loss_accum.append(loss / len(x_train))
+            loss_accum.append(loss / len(x_train_batch))
             test_loss_accum.append(test_loss / len(x_test))
 
             print(
@@ -58,6 +59,6 @@ class Model:
             )
 
         plt.plot(loss_accum, label="Train Loss")
-        # plt.plot(test_loss_accum, label="Test Loss")
+        plt.plot(test_loss_accum, label="Test Loss")
         plt.legend()
         plt.show()

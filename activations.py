@@ -1,13 +1,20 @@
 import numpy as np
 from classes.activation import Activation
+from classes.layer import Layer
 
 
 class Sigmoid(Activation):
     def __init__(self):
         super().__init__(
-            activation=lambda x: 1 / (1 + np.exp(-x)),
-            activation_prime=lambda x: x * (1 - x)
+            activation=self.activation,
+            activation_prime=self.activation_prime
         )
+
+    def activation(self, input):
+        return 1 / (1 + np.exp(-input))
+
+    def activation_prime(self, input):
+        return input * (1 - input)
 
 
 class ReLU(Activation):
@@ -18,24 +25,17 @@ class ReLU(Activation):
         )
 
     def activation(self, input):
-        self.output = np.maximum(0, input)
-        return self.output
+        return np.maximum(0, input)
 
-    def activation_prime(self, output_gradient):
-        return np.where(self.output > 0, 1, 0)
+    def activation_prime(self, input):
+        return np.where(input > 0, 1, 0)
 
 
-class Softmax(Activation):
-    def __init__(self):
-        super().__init__(
-            activation=self.activation,
-            activation_prime=self.activation_prime
-        )
-
-    def activation(self, input):
+class Softmax(Layer):
+    def forward(self, input):
         exp_x = np.exp(input - np.max(input, axis=1, keepdims=True))
         self.output = exp_x / np.sum(exp_x, axis=1, keepdims=True)
         return self.output
 
-    def activation_prime(self, output_gradient):
+    def backward(self, output_gradient, learning_rate):
         return output_gradient

@@ -1,6 +1,5 @@
 class Layer:
-    def __init__(self, shape):
-        self.input = None
+    def __init__(self):
         pass
 
     def forward(self, input):
