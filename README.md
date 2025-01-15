@@ -124,7 +124,7 @@ $$
 f'(x) = x (1 - x)
 $$
 
-> 💡 In this case, $\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \odot x (1 - x)$.
+> 💡 Here for instance, $\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \odot x (1 - x)$.
 
 #### ReLU
 
