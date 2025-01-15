@@ -6,6 +6,8 @@
 
 - [Introduction](#introduction) 👋
 - [Layers](#layers) 📚
+    - [Dense](#dense)
+    - [Activation](#activation)
 - [Forward Propagation](#forward-propagation) ➡️
 - [Backward Propagation](#backward-propagation) 🔙
     - [Softmax + cross-entropy loss](#softmax--cross-entropy-loss)
