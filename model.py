@@ -11,11 +11,13 @@ class Model:
         self,
         layers: list[Layer],
         loss: Loss,
+        optimizer,
         scaler=None,
         patience=float("inf"),
     ):
         self.layers = layers
         self.loss = loss
+        self.optimizer = optimizer
         self.scaler = scaler
         self.patience = patience
 
@@ -24,9 +26,12 @@ class Model:
             input = layer.forward(input)
         return input
 
-    def backward(self, output_gradient, learning_rate):
+    def backward(self, output_gradient):
         for layer in reversed(self.layers):
-            output_gradient = layer.backward(output_gradient, learning_rate)
+            output_gradient = layer.backward(
+                output_gradient,
+                self.optimizer
+            )
         return output_gradient
 
     def fit(
@@ -36,7 +41,6 @@ class Model:
         x_test,
         y_test,
         epochs,
-        learning_rate,
         batch_size=None,
     ):
         train_losses = []
@@ -61,7 +65,7 @@ class Model:
 
                 y_pred = self.forward(x_train_batch)
                 gradients = self.loss.prime(y_pred, y_train_batch)
-                self.backward(gradients, learning_rate)
+                self.backward(gradients)
 
             y_pred_train = self.forward(x_train)
             train_losses.append(self.loss.compute(y_pred_train, y_train)

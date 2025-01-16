@@ -3,6 +3,7 @@ import layers
 import activations
 import initializers
 import losses
+import optimizers
 from model import Model
 from preprocessing import load_data, to_categorical
 from scaler import StandardScaler
@@ -17,6 +18,8 @@ def main():
     scaler = StandardScaler()
     scaler.fit(X_train)
 
+    optimizer = optimizers.SGD(learning_rate=0.001, momentum=0.1)
+
     model = Model(
         layers=[
             layers.Dense((30, 20), initializers.random),
@@ -25,24 +28,24 @@ def main():
             activations.ReLU(leak=0),
             layers.Dense((10, 5), initializers.random),
             activations.ReLU(leak=0),
-            layers.Dense((5, 1), initializers.random),
-            activations.Sigmoid()
+            layers.Dense((5, 2), initializers.random),
+            activations.Softmax()
         ],
         scaler=scaler,
-        loss=losses.BCE(),
+        loss=losses.CCE(),
+        optimizer=optimizer,
         patience=42,
     )
 
     model.fit(
         x_train=X_train,
-        # y_train=to_categorical(y_train),
-        y_train=np.where(y_train == "M", 1, 0).reshape(-1, 1),
+        y_train=to_categorical(y_train),
+        # y_train=np.where(y_train == "M", 1, 0).reshape(-1, 1),
         x_test=X_test,
-        # y_test=to_categorical(y_test),
-        y_test=np.where(y_test == "M", 1, 0).reshape(-1, 1),
+        y_test=to_categorical(y_test),
+        # y_test=np.where(y_test == "M", 1, 0).reshape(-1, 1),
         epochs=1000,
         batch_size=32,
-        learning_rate=0.001,
     )
 
     model.save()
