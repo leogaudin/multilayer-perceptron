@@ -58,9 +58,11 @@ class Model:
                                     == y_test.argmax(axis=1)).mean())
 
             print(
-                "Epoch: ", epoch,
-                "Loss: ", train_losses[-1],
-                "Test Loss: ", test_losses[-1],
+                "EPOCH", epoch, "\t",
+                "loss: ", f"{train_losses[-1]:.7f}", "\t",
+                "val_loss: ", f"{test_losses[-1]:.7f}", "\t",
+                "accuracy: ", f"{train_accuracies[-1]:.7f}", "\t",
+                "val_accuracy: ", f"{test_accuracies[-1]:.7f}"
             )
 
         fig, ax = plt.subplots(2)
