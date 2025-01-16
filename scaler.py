@@ -1,10 +1,10 @@
 import numpy as np
 
 
-class StandardScaler:
-    def __init__(self):
-        self.mean = None
-        self.std = None
+class StandardScaler():
+    def __init__(self, mean=None, std=None):
+        self.mean = mean
+        self.std = std
 
     def save(self, filename):
         np.savez(filename, mean=self.mean, std=self.std)

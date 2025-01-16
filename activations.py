@@ -1,6 +1,5 @@
 import numpy as np
 from classes.activation import Activation
-from classes.layer import Layer
 
 
 class Sigmoid(Activation):
@@ -32,11 +31,16 @@ class ReLU(Activation):
         return np.maximum(input > 0, self.leak)
 
 
-class Softmax(Layer):
-    def forward(self, input):
-        exp_x = np.exp(input - np.max(input, axis=1, keepdims=True))
-        self.output = exp_x / np.sum(exp_x, axis=1, keepdims=True)
-        return self.output
+class Softmax(Activation):
+    def __init__(self):
+        super().__init__(
+            activation=self.activation,
+            activation_prime=self.activation_prime
+        )
 
-    def backward(self, output_gradient, learning_rate):
-        return output_gradient
+    def activation(self, input):
+        exp_x = np.exp(input - np.max(input, axis=1, keepdims=True))
+        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+    def activation_prime(self, input):
+        return 1
