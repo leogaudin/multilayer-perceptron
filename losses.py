@@ -23,7 +23,7 @@ class BCE(Loss):
     def bce(self, y_pred, y_true):
         y_pred = np.clip(y_pred, 1e-15, 1 - 1e-15)
         return -np.sum(y_true * np.log(y_pred)
-                       + (1 - y_true) * np.log(1 - y_pred))
+                       + (1 - y_true) * np.log(1 - y_pred)) / len(y_true)
 
     def bce_prime(self, y_pred, y_true):
         y_pred = np.clip(y_pred, 1e-15, 1 - 1e-15)
@@ -38,4 +38,4 @@ class MSE(Loss):
         return np.mean((y_true - y_pred) ** 2)
 
     def mse_prime(self, y_pred, y_true):
-        return 2 * (y_pred - y_true) / len(y_true)
+        return y_pred - y_true

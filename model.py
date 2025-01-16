@@ -1,7 +1,9 @@
 from classes.loss import Loss
 from classes.layer import Layer
+from scaler import StandardScaler
 import pickle
 from stats import plot
+from typing import Self
 
 
 class Model:
@@ -98,6 +100,11 @@ class Model:
             test_accuracies=test_accuracies,
         )
 
+    def predict(self, x):
+        if self.scaler is not None:
+            x = self.scaler.transform(x)
+        return self.forward(x)
+
     def save(self, filename="model"):
         data = {
             "model": self,
@@ -108,7 +115,7 @@ class Model:
         file.close()
 
     @staticmethod
-    def load(filename="model"):
+    def load(filename="model") -> tuple[Self, StandardScaler]:
         file = open(filename + ".pkl", "rb")
         data = pickle.load(file)
         file.close()

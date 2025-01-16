@@ -1,4 +1,4 @@
-# import numpy as np
+import numpy as np
 import layers
 import activations
 import initializers
@@ -25,21 +25,21 @@ def main():
             activations.ReLU(leak=0),
             layers.Dense((10, 5), initializers.random),
             activations.ReLU(leak=0),
-            layers.Dense((5, 2), initializers.random),
-            activations.Softmax()
+            layers.Dense((5, 1), initializers.random),
+            activations.Sigmoid()
         ],
         scaler=scaler,
-        loss=losses.CCE(),
+        loss=losses.BCE(),
         patience=42,
     )
 
     model.fit(
         x_train=X_train,
-        y_train=to_categorical(y_train),
-        # y_train=np.where(y_train == "M", 1, 0).reshape(-1, 1),
+        # y_train=to_categorical(y_train),
+        y_train=np.where(y_train == "M", 1, 0).reshape(-1, 1),
         x_test=X_test,
-        y_test=to_categorical(y_test),
-        # y_test=np.where(y_test == "M", 1, 0).reshape(-1, 1),
+        # y_test=to_categorical(y_test),
+        y_test=np.where(y_test == "M", 1, 0).reshape(-1, 1),
         epochs=1000,
         batch_size=32,
         learning_rate=0.001,
