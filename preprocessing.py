@@ -17,6 +17,27 @@ def load_data(train_path: str, test_path: str):
         "Concave points",
         "Symmetry",
         "Fractal dimension",
+
+        "Radius SE",
+        "Texture SE",
+        "Perimeter SE",
+        "Area SE",
+        "Smoothness SE",
+        "Compactness SE",
+        "Concavity SE",
+        "Concave points SE",
+        "Symmetry SE",
+        "Fractal dimension SE",
+        "Radius worst",
+        "Texture worst",
+        "Perimeter worst",
+        "Area worst",
+        "Smoothness worst",
+        "Compactness worst",
+        "Concavity worst",
+        "Concave points worst",
+        "Symmetry worst",
+        "Fractal dimension worst",
     ]
 
     X_train = df_train.drop(columns=["Diagnosis"])

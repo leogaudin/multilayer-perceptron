@@ -1,4 +1,3 @@
-import numpy as np
 from classes.loss import Loss
 from classes.layer import Layer
 import matplotlib.pyplot as plt
@@ -27,38 +26,51 @@ class Model:
         epochs,
         learning_rate,
         loss_function: Loss,
-        batch_size=32,
+        batch_size=None,
     ):
-        loss_accum = []
-        test_loss_accum = []
+        train_losses = []
+        test_losses = []
+        train_accuracies = []
+        test_accuracies = []
 
         for epoch in range(epochs):
             if batch_size is None:
                 batch_size = len(x_train)
-            batch = np.random.choice(len(x_train), batch_size)
-            x_train_batch = x_train[batch]
-            y_train_batch = y_train[batch]
-            loss = 0
-            test_loss = 0
 
-            y_pred = self.forward(x_train_batch)
-            loss += loss_function.compute(y_pred, y_train_batch)
-            grad = loss_function.prime(y_pred, y_train_batch)
-            self.backward(grad, learning_rate)
+            for i in range(0, len(x_train), batch_size):
+                x_train_batch = x_train[i:i + batch_size]
+                y_train_batch = y_train[i:i + batch_size]
 
-            y_pred = self.forward(x_test)
-            test_loss += loss_function.compute(y_pred, y_test)
+                y_pred = self.forward(x_train_batch)
+                gradients = loss_function.prime(y_pred, y_train_batch)
+                self.backward(gradients, learning_rate)
 
-            loss_accum.append(loss / len(x_train_batch))
-            test_loss_accum.append(test_loss / len(x_test))
+            y_pred_train = self.forward(x_train)
+            train_losses.append(loss_function.compute(y_pred_train, y_train)
+                                / len(y_train))
+            train_accuracies.append((y_pred_train.argmax(axis=1)
+                                     == y_train.argmax(axis=1)).mean())
+
+            y_pred_test = self.forward(x_test)
+            test_losses.append(loss_function.compute(y_pred_test, y_test)
+                               / len(y_test))
+            test_accuracies.append((y_pred_test.argmax(axis=1)
+                                    == y_test.argmax(axis=1)).mean())
 
             print(
                 "Epoch: ", epoch,
-                "Loss: ", loss_accum[-1],
-                "Test Loss: ", test_loss_accum[-1],
+                "Loss: ", train_losses[-1],
+                "Test Loss: ", test_losses[-1],
             )
 
-        plt.plot(loss_accum, label="Train Loss")
-        plt.plot(test_loss_accum, label="Test Loss")
-        plt.legend()
+        fig, ax = plt.subplots(2)
+
+        ax[0].plot(train_losses, label="Train Loss")
+        ax[0].plot(test_losses, label="Test Loss")
+        ax[0].legend()
+
+        ax[1].plot(train_accuracies, label="Train Accuracy")
+        ax[1].plot(test_accuracies, label="Test Accuracy")
+        ax[1].legend()
+
         plt.show()

@@ -14,21 +14,22 @@ class Sigmoid(Activation):
         return 1 / (1 + np.exp(-input))
 
     def activation_prime(self, input):
-        return input * (1 - input)
+        return self.activation(input) * (1 - self.activation(input))
 
 
 class ReLU(Activation):
-    def __init__(self):
+    def __init__(self, leak=0):
+        self.leak = leak
         super().__init__(
             activation=self.activation,
             activation_prime=self.activation_prime
         )
 
     def activation(self, input):
-        return np.maximum(0, input)
+        return np.maximum(input, self.leak * input)
 
     def activation_prime(self, input):
-        return np.where(input > 0, 1, 0)
+        return np.maximum(input > 0, self.leak)
 
 
 class Softmax(Layer):
