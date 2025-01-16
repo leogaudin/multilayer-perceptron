@@ -17,8 +17,6 @@
     - [Dense layers](#dense-layers)
     - [Putting it all together](#putting-it-all-together)
 - [Resources](#resources) 📖
-<!-- - [Losses](#losses) 📉
-- [Optimizers](#optimizers) 🚀 -->
 
 ## Introduction
 
@@ -123,10 +121,10 @@ Let's see some derivatives $f'(x)$ for common activation functions.
 The derivative of the sigmoid function is given by:
 
 $$
-f'(x) = x (1 - x)
+f'(x) = f(x) (1 - f(x))
 $$
 
-> 💡 Here for instance, $\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \odot x (1 - x)$.
+> 💡 Here for instance, $\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \odot f(x) (1 - f(x))$.
 
 #### ReLU
 
