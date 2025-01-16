@@ -30,6 +30,7 @@ def main():
         ],
         scaler=scaler,
         loss=losses.CCE(),
+        patience=42,
     )
 
     model.fit(
