@@ -16,6 +16,11 @@
         - [ReLU](#relu)
     - [Dense layers](#dense-layers)
     - [Putting it all together](#putting-it-all-together)
+- [Early stopping](#early-stopping) 🛑
+- [Complex optimizations](#complex-optimizations) 🚀
+    - [Momentum](#momentum)
+    - [RMSprop](#rmsprop)
+    - [Adam](#adam)
 - [Resources](#resources) 📖
 
 ## Introduction
@@ -179,6 +184,59 @@ During a single epoch, backpropagation will look like this:
 
 > 💡 You might end up fighting with NumPy's broadcasting when working with batches. Do not sum or average the batches without reason. You should be able to implement this without doing any other sum than the biases update's.
 
+## Early stopping
+
+When training a neural network, it is good practice to keep track of the loss on the training data, obviously, but also on some **validation data**, that is data that the neural network has never seen before.
+
+Typically, if we plot the training loss and the validation loss, we will see that the training loss will decrease over time, while the validation loss will decrease at first, but then increase again.
+
+<p align='center'>
+  <img src='./assets/overfitting.webp' alt='Overfitting' />
+</p>
+
+This is called **overfitting**, and it happens when the neural network learns the training data too well, and starts to "learn the noise" in the data.
+
+Although the loss on the training data is still decreasing, it is basically useless to keep going, as it will never perform that well on new data.
+
+That is why we use **early stopping**, which consists of stopping the training when the validation loss starts to increase again.
+
+It is fairly simply to implement, you just need to add the following logic to your training loop:
+
+1. Initialize a counter and a variable to keep track of the best loss.
+```python
+patience_counter = 0
+best_loss = float("inf")
+```
+2. If the loss is lower than the previous best loss, save it.
+```python
+if val_loss < best_loss:
+    best_loss = val_loss
+```
+
+3. If the loss is higher than the previous best loss, increment the counter.
+```python
+else:
+    patience_counter += 1
+```
+
+4. If the counter reaches a certain threshold, stop the training.
+```python
+if patience_counter >= patience:
+    break
+```
+
+> 💡 You can also save the model's weights when the validation loss is the lowest, and load them back when you stop the training.
+
+That's it!
+
+## Complex optimizations
+
+### Momentum
+
+### RMSprop
+
+### Adam
+
 ## Resources
 
 - [📺 YouTube − Neural Networks from Scratch](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3) : understand the various components of a neural network and how to create one in a modular way.
@@ -188,5 +246,6 @@ During a single epoch, backpropagation will look like this:
 - [📺 YouTube − Neural Network from Scratch | Mathematics & Python Code](https://www.youtube.com/watch?v=pauPCy_s0Ok) : understand the actual implementation of backpropagation in code.
 - [📖 Medium − Neural Network from scratch in Python](https://towardsdatascience.com/math-neural-network-from-scratch-in-python-d6da9f29ce65) : the corresponding article to the previous video.
 - [📖 Pinecone − Cross-Entropy Loss: make predictions with confidence](https://www.pinecone.io/learn/cross-entropy-loss/#Derivative-of-the-Softmax-Cross-Entropy-Loss-Function) : the full derivation of the softmax + cross-entropy loss.
+- [📺 YouTube − Optimization for Deep Learning (Momentum, RMSprop, AdaGrad, Adam)](https://www.youtube.com/watch?v=NE88eqLngkg)
 
 - [💬 ]()
