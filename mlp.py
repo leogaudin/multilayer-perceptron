@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 import layers
 import activations
 import initializers
@@ -18,7 +18,7 @@ def main():
     scaler = StandardScaler()
     scaler.fit(X_train)
 
-    optimizer = optimizers.SGD(learning_rate=0.001, momentum=0.1)
+    optimizer = optimizers.Adam()
 
     model = Model(
         layers=[

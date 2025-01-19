@@ -233,9 +233,105 @@ That's it!
 
 ### Momentum
 
+Vanilla gradient descent consists of simply updating the weights and biases based on the gradients.
+
+The concept of momentum introduces some inertia in the updates, by adding a fraction of the previous update to the current update.
+
+To implement it, you can simply store the previous update in a variable, and update it as follows:
+
+```python
+if velocity is None:
+    velocity = np.zeros_like(weights)
+
+velocity = momentum * velocity + learning_rate * gradient
+weights -= velocity
+```
+
+Note that the only difference with the vanilla gradient descent is the addition of the `momentum * velocity` term, as vanilla gradient descent would simply be:
+
+```python
+weights -= learning_rate * gradient
+```
+
 ### RMSprop
 
+RMSprop is a more complex optimization algorithm that adapts the learning rate based on the gradients.
+
+It is based on AdaGrad, which adapts the learning rate based on the sum of the squared gradients. However, it is considered too aggressive, as the learning rate decreases too quickly.
+
+RMSprop introduces a **decay factor** to the sum of the squared gradients, which allows the learning rate to decrease more slowly.
+
+We can introduce some "velocity" term as we did before, that is defined as follows:
+
+$$
+v_t = \beta \cdot v_{t - 1} + (1 - \beta) \cdot {\nabla J(\theta)}^2
+$$
+
+Where:
+
+- $v_t$ is the velocity at time $t$
+- $\beta$ is the decay factor (around 0.9)
+- $\nabla J(\theta)$ is the gradient of the loss w.r.t. the weights
+
+> 💡 ${\nabla J(\theta)}^2$ is of course a Hadamard product, we could have noted it $\nabla J(\theta) \odot \nabla J(\theta)$.
+
+Then, we can update the weights as follows:
+
+$$
+\theta = \theta - \frac{\eta}{\sqrt{v_t + \epsilon}} \cdot \nabla J(\theta)
+$$
+
+As you can see, the velocity is based on
+
+Where:
+
+- $\eta$ is the learning rate
+- $\epsilon$ is a small number (e.g. $10^{-7}$), to avoid division by zero
+
+The implementation logic is the same as before, only the update formula changes!
+
+You can check out this [interesting article](https://medium.com/@piyushkashyap045/understanding-rmsprop-a-simple-guide-to-one-of-deep-learnings-powerful-optimizers-403baeed9922) for a more in-depth explanation.
+
 ### Adam
+
+Adam is a combination of momentum and RMSprop, and is considered one of the best optimization algorithms for neural networks. It stands for **Ada**ptive **M**oment Estimation.
+
+It introduces **two** momentum terms, that we will denote $m_t$ and $v_t$.
+
+$m_t$ is the one that will **add some inertia to the updates**, and is defined as follows:
+
+$$
+m_t = \beta_1 \cdot m_{t - 1} + (1 - \beta_1) \cdot \nabla J(\theta)
+$$
+
+Where:
+
+- $m_t$ is the momentum at time $t$
+- $\beta_1$ is the decay factor (around 0.9)
+- $\nabla J(\theta)$ is the gradient of the loss w.r.t. the weights
+
+$v_t$, on its side, will **adapt the learning rate** based on the gradients, and is defined as follows:
+
+$$
+v_t = \beta_2 \cdot v_{t - 1} + (1 - \beta_2) \cdot {\nabla J(\theta)}^2
+$$
+
+Where:
+
+- $v_t$ is the momentum at time $t$
+- $\beta_2$ is the decay factor (around 0.999)
+- $\nabla J(\theta)$ is the gradient of the loss w.r.t. the weights
+
+Then, we can update the weights as follows:
+
+$$
+\theta = \theta - \frac{\eta}{\epsilon + \sqrt{v_t}} \cdot m_t
+$$
+
+Where:
+
+- $\eta$ is the learning rate
+- $\epsilon$ is a small number (e.g. $10^{-7}$), to avoid division by zero
 
 ## Resources
 
@@ -247,5 +343,6 @@ That's it!
 - [📖 Medium − Neural Network from scratch in Python](https://towardsdatascience.com/math-neural-network-from-scratch-in-python-d6da9f29ce65) : the corresponding article to the previous video.
 - [📖 Pinecone − Cross-Entropy Loss: make predictions with confidence](https://www.pinecone.io/learn/cross-entropy-loss/#Derivative-of-the-Softmax-Cross-Entropy-Loss-Function) : the full derivation of the softmax + cross-entropy loss.
 - [📺 YouTube − Optimization for Deep Learning (Momentum, RMSprop, AdaGrad, Adam)](https://www.youtube.com/watch?v=NE88eqLngkg)
+- [📖 Medium − Understanding RMSProp: A Simple Guide to One of Deep Learning’s Powerful Optimizers](https://medium.com/@piyushkashyap045/understanding-rmsprop-a-simple-guide-to-one-of-deep-learnings-powerful-optimizers-403baeed9922)
 
 - [💬 ]()
