@@ -1,3 +1,5 @@
+mnist/
+mnist_tester.py
 *.pkl
 *.csv
 *.npz

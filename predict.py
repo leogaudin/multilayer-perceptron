@@ -1,5 +1,5 @@
 from model import Model
-from preprocessing import load_data
+from preprocessing import load_data, to_categorical
 import numpy as np
 import losses
 
@@ -9,11 +9,12 @@ def main():
     _, _, X_test, y_test = load_data(test_path="data_test.csv")
 
     y_pred = model.predict(X_test)
-    y_pred = np.where(y_pred > 0.5, 1, 0)
-    y_true = np.where(y_test == "M", 1, 0).reshape(-1, 1)
+    y_true = to_categorical(y_test)
+    y_pred = np.argmax(y_pred, axis=1)
+    y_true = np.argmax(y_true, axis=1)
     print("Test accuracy:", f"{(y_pred == y_true).mean() * 100:.2f}%")
 
-    loss = losses.BCE()
+    loss = losses.CCE()
     print("Test loss:", loss.compute(y_pred, y_true) / len(y_true))
 
 

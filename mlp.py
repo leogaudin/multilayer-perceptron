@@ -1,4 +1,3 @@
-# import numpy as np
 import layers
 import activations
 import initializers
@@ -7,48 +6,94 @@ import optimizers
 from model import Model
 from preprocessing import load_data, to_categorical
 from scaler import StandardScaler
+from stats import plot_multiple_losses
+import numpy as np
 
 
 def main():
+    model_losses = []
+
     X_train, y_train, X_test, y_test = load_data(
         train_path="data_train.csv",
         test_path="data_test.csv"
     )
+    y_train = to_categorical(y_train)
+    y_test = to_categorical(y_test)
 
     scaler = StandardScaler()
     scaler.fit(X_train)
 
-    optimizer = optimizers.Adam()
-
-    model = Model(
+    model_adam = Model(
         layers=[
-            layers.Dense((30, 20), initializers.random),
-            activations.ReLU(leak=0),
-            layers.Dense((20, 10), initializers.random),
-            activations.ReLU(leak=0),
-            layers.Dense((10, 5), initializers.random),
-            activations.ReLU(leak=0),
-            layers.Dense((5, 2), initializers.random),
+            layers.Dense((30, 800), initializers.he),
+            activations.ReLU(),
+            layers.Dense((800, 400), initializers.he),
+            activations.ReLU(),
+            layers.Dense((400, 2), initializers.he),
             activations.Softmax()
         ],
         scaler=scaler,
         loss=losses.CCE(),
-        optimizer=optimizer,
-        patience=42,
+        optimizer=optimizers.Adam(),
     )
 
-    model.fit(
+    (
+        train_losses,
+        test_losses,
+        train_accuracies,
+        test_accuracies
+    ) = model_adam.fit(
         x_train=X_train,
-        y_train=to_categorical(y_train),
-        # y_train=np.where(y_train == "M", 1, 0).reshape(-1, 1),
+        y_train=y_train,
         x_test=X_test,
-        y_test=to_categorical(y_test),
-        # y_test=np.where(y_test == "M", 1, 0).reshape(-1, 1),
-        epochs=1000,
+        y_test=y_test,
+        epochs=42,
         batch_size=32,
     )
 
-    model.save()
+    model_adam.save()
+
+    model_losses.append(test_losses)
+
+    model_sgd = Model(
+        layers=[
+            layers.Dense((30, 800), initializers.he),
+            activations.ReLU(),
+            layers.Dense((800, 400), initializers.he),
+            activations.ReLU(),
+            layers.Dense((400, 2), initializers.he),
+            activations.Softmax()
+        ],
+        scaler=scaler,
+        loss=losses.CCE(),
+        optimizer=optimizers.SGD(),
+    )
+
+    (
+        train_losses,
+        test_losses,
+        train_accuracies,
+        test_accuracies
+    ) = model_sgd.fit(
+        x_train=X_train,
+        y_train=y_train,
+        x_test=X_test,
+        y_test=y_test,
+        epochs=42,
+        batch_size=32,
+    )
+
+    model_sgd.save()
+
+    model_losses.append(test_losses)
+
+    plot_multiple_losses(
+        losses=model_losses,
+        labels=["Adam", "SGD"],
+        title="Losses",
+        xlabel="Epochs",
+        ylabel="Loss",
+    )
 
 
 if __name__ == "__main__":

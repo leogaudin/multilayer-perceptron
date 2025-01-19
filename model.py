@@ -2,8 +2,8 @@ from losses import Loss
 from layers import Layer
 from scaler import StandardScaler
 import pickle
-from stats import plot
 from typing import Self
+from metrics import true_falses
 
 
 class Model:
@@ -12,7 +12,7 @@ class Model:
         layers: list[Layer],
         loss: Loss,
         optimizer,
-        scaler=None,
+        scaler: StandardScaler = None,
         patience=float("inf"),
     ):
         self.layers = layers
@@ -87,22 +87,35 @@ class Model:
 
             print(
                 "EPOCH", epoch, "\t",
-                "loss: ", f"{train_losses[-1]:.7f}", "\t",
-                "val_loss: ", f"{test_losses[-1]:.7f}", "\t",
-                "accuracy: ", f"{train_accuracies[-1]:.7f}", "\t",
-                "val_accuracy: ", f"{test_accuracies[-1]:.7f}"
+                "loss:", f"{train_losses[-1]:.7f}", "\t",
+                "val_loss:", f"{test_losses[-1]:.7f}", "\t",
+                "accuracy:", f"{train_accuracies[-1]:.7f}", "\t",
+                "val_accuracy:", f"{test_accuracies[-1]:.7f}"
+            )
+
+            (
+                true_positives,
+                true_negatives,
+                false_positives,
+                false_negatives
+            ) = true_falses(y_test, y_pred_test)
+
+            print(
+                "Confusion:", "\t",
+                "true_positives:", true_positives, "\t",
+                "true_negatives:", true_negatives, "\t",
+                "false_positives:", false_positives, "\t",
+                "false_negatives:", false_negatives,
+                "\n"
             )
 
             if patience_counter >= self.patience:
                 print("EARLY STOPPING TRIGGERED")
                 break
 
-        plot(
-            train_losses=train_losses,
-            test_losses=test_losses,
-            train_accuracies=train_accuracies,
-            test_accuracies=test_accuracies,
-        )
+        print("Training finished.")
+
+        return train_losses, test_losses, train_accuracies, test_accuracies
 
     def predict(self, x):
         if self.scaler is not None:
