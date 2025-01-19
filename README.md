@@ -344,5 +344,3 @@ Where:
 - [📖 Pinecone − Cross-Entropy Loss: make predictions with confidence](https://www.pinecone.io/learn/cross-entropy-loss/#Derivative-of-the-Softmax-Cross-Entropy-Loss-Function) : the full derivation of the softmax + cross-entropy loss.
 - [📺 YouTube − Optimization for Deep Learning (Momentum, RMSprop, AdaGrad, Adam)](https://www.youtube.com/watch?v=NE88eqLngkg)
 - [📖 Medium − Understanding RMSProp: A Simple Guide to One of Deep Learning’s Powerful Optimizers](https://medium.com/@piyushkashyap045/understanding-rmsprop-a-simple-guide-to-one-of-deep-learnings-powerful-optimizers-403baeed9922)
-
-- [💬 ]()
