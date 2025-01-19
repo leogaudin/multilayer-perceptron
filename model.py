@@ -1,5 +1,5 @@
-from classes.loss import Loss
-from classes.layer import Layer
+from losses import Loss
+from layers import Layer
 from scaler import StandardScaler
 import pickle
 from stats import plot
