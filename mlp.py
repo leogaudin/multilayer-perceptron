@@ -118,8 +118,6 @@ def main():
 
     model_losses.append(train_losses)
 
-    print(model_losses)
-
     plot_multiple_losses(
         losses=model_losses,
         labels=["Adam", "SGD", "RMSprop"],
