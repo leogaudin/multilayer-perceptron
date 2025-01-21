@@ -1,7 +1,6 @@
 mnist/
 mnist_tester.py
 *.pkl
-*.csv
 *.npz
 *.png
 .DS_Store

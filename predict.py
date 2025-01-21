@@ -1,11 +1,11 @@
-from model import Model
+from model import load_model
 from preprocessing import load_data, to_categorical
 import numpy as np
 import losses
 
 
 def main():
-    model, _ = Model.load(filename="model")
+    model, _ = load_model(filename="model")
     _, _, X_test, y_test = load_data(test_path="data_test.csv")
 
     y_pred = model.predict(X_test)

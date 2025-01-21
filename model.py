@@ -2,7 +2,6 @@ from losses import Loss
 from layers import Layer
 from scaler import StandardScaler
 import pickle
-from typing import Self
 from metrics import true_falses
 
 
@@ -131,9 +130,9 @@ class Model:
         pickle.dump(data, file)
         file.close()
 
-    @staticmethod
-    def load(filename="model") -> tuple[Self, StandardScaler]:
-        file = open(filename + ".pkl", "rb")
-        data = pickle.load(file)
-        file.close()
-        return data['model'], data['scaler']
+
+def load_model(filename="model") -> tuple[Model, StandardScaler]:
+    file = open(filename + ".pkl", "rb")
+    data = pickle.load(file)
+    file.close()
+    return data['model'], data['scaler']
