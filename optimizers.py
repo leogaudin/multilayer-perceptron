@@ -2,9 +2,9 @@ import numpy as np
 
 
 def calculate_gradients(output_gradient, layer):
-    weights_gradient = np.dot(layer.input.T, output_gradient)
+    weights_gradient = np.matmul(layer.input.T, output_gradient)
     biases_gradient = np.sum(output_gradient, axis=0, keepdims=True)
-    input_gradient = np.dot(output_gradient, layer.weights.T)
+    input_gradient = np.matmul(output_gradient, layer.weights.T)
 
     return weights_gradient, biases_gradient, input_gradient
 
