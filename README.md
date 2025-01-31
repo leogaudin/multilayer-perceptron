@@ -151,14 +151,16 @@ Here, we assume the weights are a matrix of shape $(n, m)$, where $n$ is the num
 The input gradient is given by:
 
 $$
-\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} \cdot W^T
+\frac{\partial E}{\partial X} = \frac{\partial E}{\partial Y} W^T
 $$
 
 The weights gradient is given by:
 
 $$
-\frac{\partial E}{\partial W} = X^T \cdot \frac{\partial E}{\partial Y}
+\frac{\partial E}{\partial W} = X^T \frac{\partial E}{\partial Y}
 $$
+
+> 💡 Here, the operations between matrices are matrix multiplications.
 
 The biases gradient is simply the output gradient $\frac{\partial E}{\partial Y}$. Note that in the case of batch-GD, you will need to sum the gradients over the batch dimension.
 
