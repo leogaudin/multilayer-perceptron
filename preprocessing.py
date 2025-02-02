@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import torch
+from metadata import device
 
 
 def load_data(
@@ -47,15 +49,24 @@ def load_data(
 
         X_train = df_train.drop(columns=["Diagnosis"])
         X_train = X_train[features].values
-        y_train = df_train["Diagnosis"].values
+        y_train = to_categorical(df_train["Diagnosis"].values)
 
     if test_path is not None:
         df_test = pd.read_csv(test_path, index_col=False, header=0)
         X_test = df_test.drop(columns=["Diagnosis"])
         X_test = X_test[features].values
-        y_test = df_test["Diagnosis"].values
+        y_test = to_categorical(df_test["Diagnosis"].values)
 
-    return X_train, y_train, X_test, y_test
+    return (
+        torch.tensor(X_train, dtype=torch.float32, device=device)
+        if X_train is not None else None,
+        torch.tensor(y_train, dtype=torch.float32, device=device)
+        if y_train is not None else None,
+        torch.tensor(X_test, dtype=torch.float32, device=device)
+        if X_test is not None else None,
+        torch.tensor(y_test, dtype=torch.float32, device=device)
+        if y_test is not None else None,
+    )
 
 
 def to_categorical(y):

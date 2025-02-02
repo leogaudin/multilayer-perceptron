@@ -4,7 +4,7 @@ import initializers
 import losses
 import optimizers
 from model import Model
-from preprocessing import load_data, to_categorical
+from preprocessing import load_data
 from scaler import StandardScaler
 from stats import plot_multiple_losses
 
@@ -16,8 +16,6 @@ def main():
         train_path="data_train.csv",
         test_path="data_test.csv"
     )
-    y_train = to_categorical(y_train)
-    y_test = to_categorical(y_test)
 
     scaler = StandardScaler()
     scaler.fit(X_train)

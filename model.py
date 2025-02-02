@@ -3,6 +3,7 @@ from layers import Layer
 from scaler import StandardScaler
 import pickle
 from metrics import true_falses
+import torch
 
 
 class Model:
@@ -20,12 +21,12 @@ class Model:
         self.scaler = scaler
         self.patience = patience
 
-    def forward(self, input):
+    def forward(self, input) -> torch.Tensor:
         for layer in self.layers:
             input = layer.forward(input)
         return input
 
-    def backward(self, output_gradient):
+    def backward(self, output_gradient) -> torch.Tensor:
         for layer in reversed(self.layers):
             output_gradient = layer.backward(
                 output_gradient,
@@ -41,7 +42,7 @@ class Model:
         y_test,
         epochs,
         batch_size=None,
-    ):
+    ) -> tuple[list[float], list[float], list[float], list[float]]:
         train_losses = []
         test_losses = []
         train_accuracies = []
@@ -67,16 +68,23 @@ class Model:
                 self.backward(gradients)
 
             y_pred_train = self.forward(x_train)
-            train_losses.append(self.loss.compute(y_pred_train, y_train)
-                                / len(y_train))
-            train_accuracies.append((y_pred_train.argmax(axis=1)
-                                     == y_train.argmax(axis=1)).mean())
+            train_loss = self.loss.compute(y_pred_train, y_train).cpu().float()
+            train_losses.append(train_loss / len(y_train))
+            train_accuracy = torch.eq(
+                torch.argmax(y_pred_train, dim=1),
+                torch.argmax(y_train, dim=1),
+            ).float().mean()
+            train_accuracy = train_accuracy
+            train_accuracies.append(train_accuracy)
 
             y_pred_test = self.forward(x_test)
-            test_losses.append(self.loss.compute(y_pred_test, y_test)
-                               / len(y_test))
-            test_accuracies.append((y_pred_test.argmax(axis=1)
-                                    == y_test.argmax(axis=1)).mean())
+            test_loss = self.loss.compute(y_pred_test, y_test).cpu().float()
+            test_losses.append(test_loss / len(y_test))
+            test_accuracy = torch.eq(
+                torch.argmax(y_pred_test, dim=1),
+                torch.argmax(y_test, dim=1),
+            ).float().mean()
+            test_accuracies.append(test_accuracy)
 
             if test_losses[-1] < best_loss:
                 best_loss = test_losses[-1]

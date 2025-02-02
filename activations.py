@@ -1,4 +1,4 @@
-import numpy as np
+import torch
 from layers import Layer
 
 
@@ -7,11 +7,11 @@ class Activation(Layer):
         self.activation = activation
         self.activation_prime = activation_prime
 
-    def forward(self, input):
+    def forward(self, input) -> torch.Tensor:
         self.input = input
         return self.activation(input)
 
-    def backward(self, output_gradient, optimizer):
+    def backward(self, output_gradient, optimizer) -> torch.Tensor:
         return output_gradient * self.activation_prime(self.input)
 
 
@@ -22,10 +22,10 @@ class Sigmoid(Activation):
             activation_prime=self.activation_prime
         )
 
-    def activation(self, input):
-        return 1 / (1 + np.exp(-input))
+    def activation(self, input) -> torch.Tensor:
+        return 1 / (1 + torch.exp(-input))
 
-    def activation_prime(self, input):
+    def activation_prime(self, input) -> torch.Tensor:
         return self.activation(input) * (1 - self.activation(input))
 
 
@@ -37,11 +37,11 @@ class ReLU(Activation):
             activation_prime=self.activation_prime
         )
 
-    def activation(self, input):
-        return np.maximum(input, self.leak * input)
+    def activation(self, input) -> torch.Tensor:
+        return torch.maximum(input, torch.tensor(self.leak) * input)
 
-    def activation_prime(self, input):
-        return np.maximum(input > 0, self.leak)
+    def activation_prime(self, input) -> torch.Tensor:
+        return torch.maximum(input > 0, torch.tensor(self.leak))
 
 
 class Softmax(Activation):
@@ -51,9 +51,9 @@ class Softmax(Activation):
             activation_prime=self.activation_prime
         )
 
-    def activation(self, input):
-        exp_x = np.exp(input - np.max(input, axis=1, keepdims=True))
-        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+    def activation(self, input) -> torch.Tensor:
+        exp_x = torch.exp(input - torch.max(input, axis=1, keepdim=True)[0])
+        return exp_x / torch.sum(exp_x, axis=1, keepdim=True)
 
-    def activation_prime(self, input):
+    def activation_prime(self, input) -> torch.Tensor:
         return 1

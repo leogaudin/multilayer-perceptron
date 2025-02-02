@@ -1,4 +1,4 @@
-import numpy as np
+import torch
 
 
 class StandardScaler():
@@ -7,18 +7,18 @@ class StandardScaler():
         self.std = std
 
     def save(self, filename):
-        np.savez(filename, mean=self.mean, std=self.std)
+        torch.save({'mean': self.mean, 'std': self.std}, filename)
 
     def load(self, filename):
-        data = np.load(filename)
+        data = torch.load(filename)
         if 'mean' not in data or 'std' not in data:
             raise ValueError('No mean or std in the file.')
         self.mean = data['mean']
         self.std = data['std']
 
     def fit(self, X):
-        self.mean = np.mean(X, axis=0)
-        self.std = np.std(X, axis=0)
+        self.mean = torch.mean(X, dim=0)
+        self.std = torch.std(X, dim=0)
 
     def transform(self, X):
         return (X - self.mean) / self.std

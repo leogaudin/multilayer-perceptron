@@ -1,17 +1,19 @@
 import numpy as np
+import torch
+from metadata import device
 
 
-def zero(shape):
-    return np.zeros(shape)
+def zero(shape) -> torch.Tensor:
+    return torch.zeros(shape, device=device)
 
 
-def he(shape):
-    return np.random.randn(*shape) * np.sqrt(2 / shape[0])
+def he(shape) -> torch.Tensor:
+    return torch.randn(*shape, device=device) * np.sqrt(2 / shape[0])
 
 
-def xavier(shape):
-    return np.random.randn(*shape) * np.sqrt(1 / shape[1])
+def xavier(shape) -> torch.Tensor:
+    return torch.randn(*shape, device=device) * np.sqrt(1 / shape[1])
 
 
-def random(shape):
-    return np.random.randn(*shape)
+def random(shape) -> torch.Tensor:
+    return torch.randn(*shape, device=device)

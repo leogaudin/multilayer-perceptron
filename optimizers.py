@@ -1,10 +1,10 @@
-import numpy as np
+import torch
 
 
-def calculate_gradients(output_gradient, layer):
-    weights_gradient = np.matmul(layer.input.T, output_gradient)
-    biases_gradient = np.sum(output_gradient, axis=0, keepdims=True)
-    input_gradient = np.matmul(output_gradient, layer.weights.T)
+def calculate_gradients(output_gradient, layer) -> tuple[torch.Tensor]:
+    weights_gradient = torch.matmul(layer.input.T, output_gradient)
+    biases_gradient = torch.sum(output_gradient, axis=0, keepdim=True)
+    input_gradient = torch.matmul(output_gradient, layer.weights.T)
 
     return weights_gradient, biases_gradient, input_gradient
 
@@ -25,8 +25,8 @@ class SGD(Optimizer):
     def update(self, layer, output_gradient):
         if not hasattr(layer, "weights_velocity")\
                 or not hasattr(layer, "biases_velocity"):
-            layer.weights_velocity = np.zeros_like(layer.weights)
-            layer.biases_velocity = np.zeros_like(layer.biases)
+            layer.weights_velocity = torch.zeros_like(layer.weights)
+            layer.biases_velocity = torch.zeros_like(layer.biases)
 
         (
             weights_gradient,
@@ -54,8 +54,8 @@ class RMSprop(Optimizer):
     def update(self, layer, output_gradient):
         if not hasattr(layer, "weights_velocity")\
                 or not hasattr(layer, "biases_velocity"):
-            layer.weights_velocity = np.zeros_like(layer.weights)
-            layer.biases_velocity = np.zeros_like(layer.biases)
+            layer.weights_velocity = torch.zeros_like(layer.weights)
+            layer.biases_velocity = torch.zeros_like(layer.biases)
 
         (
             weights_gradient,
@@ -69,9 +69,9 @@ class RMSprop(Optimizer):
             + (1 - self.decay) * biases_gradient ** 2
 
         layer.weights -= self.learning_rate * weights_gradient \
-            / (np.sqrt(layer.weights_velocity) + self.epsilon)
+            / (torch.sqrt(layer.weights_velocity) + self.epsilon)
         layer.biases -= self.learning_rate * biases_gradient \
-            / (np.sqrt(layer.biases_velocity) + self.epsilon)
+            / (torch.sqrt(layer.biases_velocity) + self.epsilon)
 
         return input_gradient
 
@@ -94,10 +94,10 @@ class Adam(Optimizer):
                 or not hasattr(layer, "biases_momentum")\
                 or not hasattr(layer, "weights_rms")\
                 or not hasattr(layer, "biases_rms"):
-            layer.weights_momentum = np.zeros_like(layer.weights)
-            layer.biases_momentum = np.zeros_like(layer.biases)
-            layer.weights_rms = np.zeros_like(layer.weights)
-            layer.biases_rms = np.zeros_like(layer.biases)
+            layer.weights_momentum = torch.zeros_like(layer.weights)
+            layer.biases_momentum = torch.zeros_like(layer.biases)
+            layer.weights_rms = torch.zeros_like(layer.weights)
+            layer.biases_rms = torch.zeros_like(layer.biases)
 
         (
             weights_gradient,
@@ -115,10 +115,10 @@ class Adam(Optimizer):
             + (1 - self.rms_decay) * biases_gradient ** 2
 
         layer.weights -= self.learning_rate /\
-            (self.epsilon + np.sqrt(layer.weights_rms))\
+            (self.epsilon + torch.sqrt(layer.weights_rms))\
             * layer.weights_momentum
         layer.biases -= self.learning_rate /\
-            (self.epsilon + np.sqrt(layer.biases_rms))\
+            (self.epsilon + torch.sqrt(layer.biases_rms))\
             * layer.biases_momentum
 
         return input_gradient
