@@ -12,7 +12,7 @@ class Activation(Layer):
         return self.activation(input)
 
     def backward(self, output_gradient, optimizer) -> torch.Tensor:
-        return output_gradient * self.activation_prime(self.input)
+        return torch.mul(output_gradient, self.activation_prime(self.input))
 
 
 class Sigmoid(Activation):
