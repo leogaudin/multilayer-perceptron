@@ -1,4 +1,7 @@
-<h1 align='center'> 🧠 multilayer-perceptron</h1>
+<div align='center'>
+	<h1>🧠 multilayer-perceptron</h1>
+	<img src="https://img.shields.io/badge/-125%2F100-success?logo=42&logoColor=fff" />
+</div>
 
 > ⚠️ This tutorial assumes you have done [dslr](https://github.com/leogaudin/dslr) and that you have a good understanding of the basics of machine learning and linear algebra.
 
